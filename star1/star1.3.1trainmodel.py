@@ -71,6 +71,7 @@ def base_scratch_model():
     x = layers.Dropout(0.3)(x)
     outputs = layers.Dense(5, activation='softmax')(x)
     
+    
     model = Model(inputs, outputs)
     
     #understand the encapsulation of the trained classes
@@ -103,6 +104,36 @@ def base_scratch_model():
     print()
     print("Understand the metrics and have your head wrapped around this concept")
     
+    class WarmupScheduling(tf.keras.callbacks.Callback):
+        def __init__(self, warmup_epoch, target_lr, initial_lr=None ):
+            super().__init__()
+            self.warmup_epoch = warmup_epoch
+            self.target_lr = target_lr
+            self.initial_lr = initial_lr if initial_lr else target_lr/100
+            self.lr_history = []
+            
+        def on_train_begin(self, logs = None):
+            tf.keras.backend.set_value(
+                self.model.optimizer.lr, self.initial_lr   
+            )
+        
+        def on_epoch_begin(self, epoch, logs = None):
+            
+            if epoch < self.target_lr:
+                progress = (epoch+1)/self.warmup_epoch
+                lr = self.initial_lr + (self.target_lr - self.initial_lr) * progress  #alternative Linear Formula + what if outside and how to program it in the outside without essentially changing the values here
+            else:
+                lr = self.target_lr
+            
+            #now here is where the LR actually gets set here
+            tf.keras.backend.set_value(self.model.optimizer.lr, lr)
+            self.lr_history.append(lr)
+       
+        def on_epoch_end(self, epoch, logs = None):
+            logs = logs or {}
+            logs['lr'] = tf.keras.backend.get_value(self.model.optimizer.lr)
+        
+    
     lr_scheduler = ExponentialDecay( #about this, explore the other various options and get the  fitting options
         initial_learning_rate=initial_learning_rate,
         decay_steps = 1000, #understand the nature of this variable 
@@ -111,9 +142,9 @@ def base_scratch_model():
     
     #callbacks to save Resources 
     early_stopping = EarlyStopping(
-        monitor = 'val_accuracy' #check other variables here too 
+        monitor = 'val_accuracy', #check other variables here too 
         patience = 5, 
-        restore_best_weights = True,
+        restore_best_weights = True
     )
     
     os.makedirs('models', exist_ok=True)
@@ -128,7 +159,7 @@ def base_scratch_model():
     reduce_lr = ReduceLROnPlateau(
         monitor = 'val_loss',
         factor = 0.5, 
-        patience = 3.
+        patience = 3,
         min_lr = 1e-7,
     )
     callbacks = [early_stopping, model_checkpoint, reduce_lr]
@@ -139,6 +170,4 @@ def base_scratch_model():
         validation_data = val_data,
         callbacks =callbacks,
     )
-    #our new feature of warming up the neural networks before training - discussed the pros and cons of this in the .md file of the respective repositories
-    
     
