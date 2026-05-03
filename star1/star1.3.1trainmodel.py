@@ -10,7 +10,7 @@ import os
 
 image_size = (224, 224)
 batch_size = 32
-epochs = 10
+epochs = 20
 learning_rate = 0.0001
 layers_unfreeze = 80
 initial_learning_rate = 0.0001
@@ -43,6 +43,7 @@ val_data = val_datagen.flow_from_directory(
     class_mode = "categorical",
     shuffle = True 
 )
+
 
 def base_scratch_model():
     print("Importing the base model for analysis")
@@ -110,7 +111,7 @@ def base_scratch_model():
             self.warmup_epoch = warmup_epoch
             self.target_lr = target_lr
             self.initial_lr = initial_lr if initial_lr else target_lr/100
-            self.lr_history = []
+            self.lr_history = [] #OOPs concept - self. and return values !
             
         def on_train_begin(self, logs = None):
             tf.keras.backend.set_value(
@@ -162,12 +163,59 @@ def base_scratch_model():
         patience = 3,
         min_lr = 1e-7,
     )
-    callbacks = [early_stopping, model_checkpoint, reduce_lr]
+    callbacks = [WarmupScheduling,lr_scheduler, early_stopping, model_checkpoint, reduce_lr]
     
     history = model.fit(
         train_data,
         epochs = epochs,
         validation_data = val_data,
-        callbacks =callbacks,
+        callbacks = callbacks,
     )
     
+    
+#addtions 
+ #understand the encapsulation of the trained classes
+
+'''
+  model = MobileNetV2(
+        weights='imagenet',
+        include_top = False, 
+        pooling = 'avg',
+        input_shape = (224, 224, 3) #explore more parameters here
+ 
+    train_data = train_datagen.flow_from_directory(
+    'dataset/train',
+    target_size = image_size,
+    batch_size = batch_size,
+    class_mode = 'categorical' #explore why !
+    shuffle=True
+    
+    x = model(inputs, training=True) #search more about this
+    
+        print()
+    print("Take a closer look here !!!!!")
+    print()
+    
+    print("Model Parameters")
+    print(f"Total {total_count :,}")
+    print(f"  Trainable: {trainable_count:,} ({trainable_count/total_count*100:.1f}%)") #explore more about this part here and make sure to understand everything here 
+    print(f" Frozen: {total_count - trainable_count}")   
+    
+    print()
+    print("Pay attention here")
+    print()
+    
+    print(f"  Base model: {base_model.name}")
+    print(f"  Total layers: {len(base_model.layers)}")
+    print(f"  Frozen: Layers 0-{freeze_till-1} ({freeze_till} layers)")
+    print(f"  Unfrozen: Layers {freeze_till}-{len(base_model.layers)-1} ({layers_unfreeze} layers)")
+    print(f"\n  Parameters:")
+    print(f"    Total: {total_count:,}")
+    print(f"    Trainable: {trainable_count:,} ({trainable_count/total_count*100:.1f}%)")
+    print(f"    Frozen: {total_count - trainable_count:,} ({(total_count-trainable_count)/total_count*100:.1f}%)")
+    
+    print()
+    print("Understand the metrics and have your head wrapped around this concept")
+    
+    
+ '''

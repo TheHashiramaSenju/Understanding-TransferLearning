@@ -47,7 +47,10 @@ num_classes = len(train_data.class_indices)
 #model loading of 2 star model
 model = tf.keras.models.load_model("models/flower_classifier_finetuned.keras")
 #evaluation
+
 initial_loss, initial_acc = model.evaluate(val_data, verbose=0)
+
+#this here we use this as the actual fine tuning script
 
 #Unfreezing the layers
 base_model = model.layers[1]
