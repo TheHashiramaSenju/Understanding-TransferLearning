@@ -134,7 +134,9 @@ class LearningRateScheduler:
             decay_rate=decay_rate
         )
 
-
+class WarmupScheduler(tf.keras.callbacks.Callback):
+    def __init__(self, warmup_epochs: int, initial_learning):
+        ass 
 class WarmupCosine(tf.keras.callbacks.Callback):
     """Custom callback for warmup + cosine annealing learning rate schedule."""
     
@@ -165,6 +167,7 @@ class WarmupCosine(tf.keras.callbacks.Callback):
         
         tf.keras.backend.set_value(self.model.optimizer.learning_rate, lr)
         self.lr_history.append(lr)
+
 
 
 class CallbackFactory:

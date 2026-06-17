@@ -4,3 +4,8 @@ __pycache__/
 *.zip
 dataset
 flowers
+*.obsidian
+.obsidian/workspace.json
+.obsidian
+
+Transfer Learning Obsidian/.obsidian

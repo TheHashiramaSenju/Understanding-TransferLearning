@@ -11,10 +11,14 @@
             "id": "d1988aec83171780",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Transfer Learning Obsidian/Notes/1.1 - Basic Unfreezing in Transfer Learning.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "1.1 - Basic Unfreezing in Transfer Learning"
             }
           }
         ]

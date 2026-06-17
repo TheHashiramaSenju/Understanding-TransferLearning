@@ -40,8 +40,6 @@ val_data = val_datagen.flow_from_directory(
     shuffle=False
 )
 
-#important point to note : Here we are twisting and training the train data. to reduce any overfitting/underfitting challenges that might arise
-#but here we dont do much of twisting of validation data because of the testing data nature it posses
 
 
 print("Building Transfer Learning")
@@ -54,13 +52,11 @@ base_model = MobileNetV2(
 
 base_model.trainable = False #layer freezing 
 
-#adding input to the neural layer 
 inputs = layers.Input(shape=(224, 224, 3))
-#unput given to the base model 
-#that initially set frozen model, now makes it differently from this freezen model in such a way that it updates all the batch normalisation layers
+
 x = base_model(inputs, training=False)
-#now the base model is trained and ready to give the outputs to the next layers, in which we are gonnna add now
-x = layers.Dense(128, activation='relu')(x) #(x) means the output from the base model and so on the next x means the next outputs from the other models
+
+x = layers.Dense(128, activation='relu')(x)
 x = layers.Dropout(0.3)(x)
 outputs = layers.Dense(5, activation='softmax')(x)
 
@@ -75,7 +71,7 @@ model.compile(
 print(f"  Total parameters: {model.count_params():,}")
 trainable_params = sum([tf.size(w).numpy() for w in model.trainable_weights])
 
-#training the model
+
 print("WE are TRAINING the BUILT model (CUSTOM MODEL)")
 history = model.fit(train_data, epochs=epochs, validation_data=val_data, verbose=1)
 
@@ -105,7 +101,7 @@ with open('models/class_names.txt', 'w') as f:
         f.write(class_name +'\n')
 print(f"Class names saved at models/class_names.txt ")
 
-#plotting the reusults 
+
 plt.subplot(1, 2, 1)
 plt.plot(history.history['accuracy'], 'b-', label='Training')
 plt.plot(history.history['val_accuracy'], 'r-', label='Validation')
@@ -115,7 +111,7 @@ plt.ylabel('Accuracy')
 plt.legend()
 plt.grid(True, alpha=0.3)
 
-#loss
+
 plt.subplot(1, 2, 2)
 plt.plot(history.history['loss'], 'b-', label='Training')
 plt.plot(history.history['val_loss'], 'r-', label='Validation')
