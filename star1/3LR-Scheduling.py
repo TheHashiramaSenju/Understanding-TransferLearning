@@ -114,7 +114,8 @@ model_checkpoint = ModelCheckpoint(
     save_best_only=True,
     verbose=1
 )
-print("  ✓ ModelCheckpoint: Save best val_accuracy")
+
+print("✓ ModelCheckpoint: Save best val_accuracy")
 
 #tips to reduce LR if validation stops working 
 reduce_lr = ReduceLROnPlateau(
@@ -162,7 +163,7 @@ print(" Saved: models/flower_classifier_star3_final.keras")
 with open('models/class_names.txt', 'w') as f:
     for class_name in train_data.class_indices.keys():
         f.write(class_name + '\n')
-print("  ✓ Saved: models/class_names.txt")
+print(" Saved: models/class_names.txt")
 
 
 print("\n Creating training plots...")
@@ -225,5 +226,5 @@ else:
 
 plt.tight_layout()
 plt.savefig('training_star3.png', dpi=150)
-print("  ✓ Saved: training_star3.png")
+print("Saved: training_star3.png")
 

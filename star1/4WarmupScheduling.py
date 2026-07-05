@@ -33,7 +33,7 @@ train_data = train_datagen.flow_from_directory(
     'dataset/train',
     target_size = image_size,
     batch_size = batch_size,
-    class_mode = 'categorical' #explore why !
+    class_mode = 'categorical', #explore why !
     shuffle=True
 )
 val_data = val_datagen.flow_from_directory(
@@ -81,7 +81,7 @@ def base_scratch_model():
     total_count = model.count_params()
     
     print()
-    print("Take a closer look here !!!!!")
+    print("Take a closer look here")
     print()
     
     print("Model Parameters")
@@ -106,9 +106,9 @@ def base_scratch_model():
     print("Understand the metrics and have your head wrapped around this concept")
     
     class WarmupScheduling(tf.keras.callbacks.Callback):
-        def __init__(self, warmup_epoch, target_lr, initial_lr=None ):
+        def __init__(self, warmup_poch, target_lr, initial_lr=None ):
             super().__init__()
-            self.warmup_epoch = warmup_epoch
+            warmup_epoch = warmup_epoch
             self.target_lr = target_lr
             self.initial_lr = initial_lr if initial_lr else target_lr/100
             self.lr_history = [] #OOPs concept - self. and return values !
@@ -133,7 +133,7 @@ def base_scratch_model():
         def on_epoch_end(self, epoch, logs = None):
             logs = logs or {}
             logs['lr'] = tf.keras.backend.get_value(self.model.optimizer.lr)
-        
+
     
     lr_scheduler = ExponentialDecay( #about this, explore the other various options and get the  fitting options
         initial_learning_rate=initial_learning_rate,
@@ -172,50 +172,3 @@ def base_scratch_model():
         callbacks = callbacks,
     )
     
-    
-#addtions 
- #understand the encapsulation of the trained classes
-
-'''
-  model = MobileNetV2(
-        weights='imagenet',
-        include_top = False, 
-        pooling = 'avg',
-        input_shape = (224, 224, 3) #explore more parameters here
- 
-    train_data = train_datagen.flow_from_directory(
-    'dataset/train',
-    target_size = image_size,
-    batch_size = batch_size,
-    class_mode = 'categorical' #explore why !
-    shuffle=True
-    
-    x = model(inputs, training=True) #search more about this
-    
-        print()
-    print("Take a closer look here !!!!!")
-    print()
-    
-    print("Model Parameters")
-    print(f"Total {total_count :,}")
-    print(f"  Trainable: {trainable_count:,} ({trainable_count/total_count*100:.1f}%)") #explore more about this part here and make sure to understand everything here 
-    print(f" Frozen: {total_count - trainable_count}")   
-    
-    print()
-    print("Pay attention here")
-    print()
-    
-    print(f"  Base model: {base_model.name}")
-    print(f"  Total layers: {len(base_model.layers)}")
-    print(f"  Frozen: Layers 0-{freeze_till-1} ({freeze_till} layers)")
-    print(f"  Unfrozen: Layers {freeze_till}-{len(base_model.layers)-1} ({layers_unfreeze} layers)")
-    print(f"\n  Parameters:")
-    print(f"    Total: {total_count:,}")
-    print(f"    Trainable: {trainable_count:,} ({trainable_count/total_count*100:.1f}%)")
-    print(f"    Frozen: {total_count - trainable_count:,} ({(total_count-trainable_count)/total_count*100:.1f}%)")
-    
-    print()
-    print("Understand the metrics and have your head wrapped around this concept")
-    
-    
- '''
