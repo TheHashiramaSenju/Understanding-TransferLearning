@@ -135,8 +135,21 @@ class LearningRateScheduler:
         )
 
 class WarmupScheduler(tf.keras.callbacks.Callback):
-    def __init__(self, warmup_epochs: int, initial_learning):
-        ass 
+    def __init__(self, warmup_epochs: int, initial_learning_rate = None, target_learning_rate = None):
+        self.warmup_epochs = warmup_epochs
+        self.target = target_learning_rate
+        self.initial = initial_learning_rate
+        
+    def on_train_begin(self, logs = None):
+        tf.keras.backend.set_value(
+            self.model.optimizer.lr, self.initial_lr 
+        )
+                
+    def on_epoch_begin(self, epoch, logs = None):
+        
+        if epoch < self.target_lr:
+            progress = (epoch+1) / self.warmup_epochs
+            lr = self.initial_lr
 class WarmupCosine(tf.keras.callbacks.Callback):
     """Custom callback for warmup + cosine annealing learning rate schedule."""
     
@@ -354,10 +367,10 @@ if __name__ == "__main__":
     # orchestrator.save_model('models/flower_classifier_final.keras')
     # orchestrator.plot_training_history(history)
     
-    print("\n✓ Training pipeline ready! Uncomment train() call to start training.\n")
+    print("\n Training pipeline ready! Uncomment train() call to start training.\n")
     
     # Example 2: Load pretrained and fine-tune
-    print("=== Example 2: Fine-tuning pretrained model ===\n")
+    print( "Example 2: Fine-tuning pretrained model\n")
     
     # Uncomment to use:
     # orchestrator2 = TrainingOrchestrator()
