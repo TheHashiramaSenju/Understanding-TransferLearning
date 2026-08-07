@@ -145,4 +145,4 @@ plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig('training_2star.png', dpi=150)
-print(f"📊 Training plot: training_2star.png")
+print(f" Training plot: training_2star.png")
