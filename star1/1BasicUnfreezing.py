@@ -45,7 +45,7 @@ val_data = val_datagen.flow_from_directory(
 print("Building Transfer Learning")
 base_model = MobileNetV2(
     weights='imagenet',
-    include_top=False, #freezing the layers and deleting the last layer 
+    include_top=False, #freezing the layers and deleting the last layer (just while we query the model we are essentially excluding the top which is actually a really important practice  transfer learning methods and applications)
     pooling='avg',
     input_shape=(224, 224, 3)
 )
